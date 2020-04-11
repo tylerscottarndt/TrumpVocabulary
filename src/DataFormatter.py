@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 import requests
 import re
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 import pickle
@@ -13,7 +12,7 @@ cv = CountVectorizer(stop_words = 'english')
 
 class DataFormatter:
     @staticmethod
-    def url_to_transcript(url):
+    def rally_url_to_transcript(url):
         headers = requests.utils.default_headers()
         headers.update({'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'})
         req = requests.get(url, headers)
@@ -33,6 +32,7 @@ class DataFormatter:
             # only include speech from Donald Trump, exclude crowd and other speakers
             if first_line == "Donald Trump: ()" or first_line == "President Trump: ()":
                 full_speech = full_speech + " " + speech_parts[1]
+
         return full_speech
 
     @staticmethod
@@ -50,13 +50,7 @@ class DataFormatter:
         # strip leading and trailing spaces
         text = text.strip()
 
-        # tokenize the text
-        tokens = word_tokenize(text)
-        # remove stop words and stem the rest
-        # tokens = [stemmer.stem(token) for token in tokens if token not in stop_words]
-        tokens = [token for token in tokens if token not in stop_words]
-
-        return tokens
+        return text
 
     @staticmethod
     def pickle_object(object_to_pickle, file_name):
