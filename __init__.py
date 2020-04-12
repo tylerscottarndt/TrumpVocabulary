@@ -19,7 +19,7 @@ def extract_urls_from(txt_file):
     url_files.close()
 
 
-    
+# Python File to setup and pickle our dataframe we plan on working with    
 if __name__ == '__main__':
     RALLY_TRANSCRIPTS, UNION_TRANSCRIPTS = [], []
     for current_url in extract_urls_from('rally_urls.txt'):
