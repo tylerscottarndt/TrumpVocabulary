@@ -1,32 +1,24 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-from sklearn.feature_extraction.text import CountVectorizer
-import pickle
-import nltk
-nltk.download('stopwords')
-stop_words = set(stopwords.words('english'))
-stemmer = PorterStemmer()
-cv = CountVectorizer(stop_words = 'english')
+from nltk.tokenize import RegexpTokenizer
+from nltk.tokenize import word_tokenize
 
-class DataFormatter:
-    @staticmethod
-    def rally_url_to_transcript(url):
+nltk.download('punkt')
+
+
+class WebScrapper:
+    def __init__(self, url):
         headers = requests.utils.default_headers()
         headers.update({'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'})
         req = requests.get(url, headers)
-        soup = BeautifulSoup(req.content, 'html.parser')
+        self.soup = BeautifulSoup(req.content, 'html.parser')
 
-        # remove the <a> tags from the HTML
-        [s.extract() for s in soup('a')]
-
+    def scrape_all(self, tag, tokenize=None):
+        [s.extract() for s in self.soup('a')]
         full_speech = ""
 
-        # <p> tags contain the entire speech
-        for p in soup.find_all("p"):
-            # split <p> tag into [speaker, speech]
+        for p in self.soup.find_all(tag):
             speech_parts = p.get_text().split("\n")
             first_line = speech_parts[0]
 
@@ -34,10 +26,17 @@ class DataFormatter:
             if first_line == "Donald Trump: ()" or first_line == "President Trump: ()":
                 full_speech = full_speech + " " + speech_parts[1]
 
+            else:
+                full_speech += speech_parts[0]
+
+        full_speech = self._clean_transcript(full_speech)
+        if tokenize:
+            full_speech = self.tokenize(full_speech)
+            return full_speech
+
         return full_speech
 
-    @staticmethod
-    def clean_transcript(text):
+    def _clean_transcript(self, text):
         # remove bracketed text
         text = re.sub('\[.*?\]', '', text)
         # remove non-word and non-space characters (i.e. punctuation)
@@ -53,10 +52,6 @@ class DataFormatter:
 
         return text
 
-    @staticmethod
-    def pickle_object(object_to_pickle, file_name):
-        pickle_out = open(file_name, "wb")
-        pickle.dump(object_to_pickle, pickle_out)
-        pickle_out.close()
-
-
+    def tokenize(self, content, amount_features=None, regex='\w+'):
+        tokenized = word_tokenize(content)
+        return tokenized
