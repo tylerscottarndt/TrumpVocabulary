@@ -1,3 +1,6 @@
+import pandas as pd
+from WebScrape import WebScrapper
+
 def addToDataFrame(content, label=None):
     rally_df = pd.DataFrame(content)
     rally_df.columns = ['transcript']
