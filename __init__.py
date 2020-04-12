@@ -16,18 +16,20 @@ def extract_urls_from(txt_file):
     url_files.close()
 
 
-RALLY_TRANSCRIPTS, UNION_TRANSCRIPTS = [], []
-for current_url in extract_urls_from('rally_urls.txt'):
-    full_speech = WebScrapper(current_url).scrape_all('p', tokenize=False)
-    RALLY_TRANSCRIPTS.append(full_speech)
+    
+if __name__ == '__main__':
+    RALLY_TRANSCRIPTS, UNION_TRANSCRIPTS = [], []
+    for current_url in extract_urls_from('rally_urls.txt'):
+        full_speech = WebScrapper(current_url).scrape_all('p', tokenize=False)
+        RALLY_TRANSCRIPTS.append(full_speech)
 
-for current_url in extract_urls_from('union.txt'):
-    full_speech = WebScrapper(current_url).scrape_all('p', tokenize=False)
-    UNION_TRANSCRIPTS.append(full_speech)
+    for current_url in extract_urls_from('union.txt'):
+        full_speech = WebScrapper(current_url).scrape_all('p', tokenize=False)
+        UNION_TRANSCRIPTS.append(full_speech)
 
-rally_df = addToDataFrame(RALLY_TRANSCRIPTS, label=1)
-union_df = addToDataFrame(UNION_TRANSCRIPTS, label=0)
-main_df = pd.concat([rally_df, union_df])
+    rally_df = addToDataFrame(RALLY_TRANSCRIPTS, label=1)
+    union_df = addToDataFrame(UNION_TRANSCRIPTS, label=0)
+    main_df = pd.concat([rally_df, union_df])
 
-# We can pickle this dataframe.
-main_df.head()
+    # We can pickle this dataframe.
+    main_df.head()
