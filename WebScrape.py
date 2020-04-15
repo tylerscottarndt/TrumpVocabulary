@@ -4,17 +4,18 @@ import re
 from nltk.tokenize import RegexpTokenizer
 from nltk.tokenize import word_tokenize
 
+import nltk
 nltk.download('punkt')
 
 
-class WebScrapper:
+class WebScraper:
     def __init__(self, url):
         headers = requests.utils.default_headers()
         headers.update({'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'})
         req = requests.get(url, headers)
         self.soup = BeautifulSoup(req.content, 'html.parser')
 
-    def scrape_all(self, tag, tokenize=None):
+    def scrape_all_rally(self, tag, tokenize=None):
         [s.extract() for s in self.soup('a')]
         full_speech = ""
 
@@ -26,8 +27,22 @@ class WebScrapper:
             if first_line == "Donald Trump: ()" or first_line == "President Trump: ()":
                 full_speech = full_speech + " " + speech_parts[1]
 
-            else:
-                full_speech += speech_parts[0]
+        full_speech = self._clean_transcript(full_speech)
+        if tokenize:
+            full_speech = self.tokenize(full_speech)
+            return full_speech
+
+        return full_speech
+
+    def scrape_all_union(self, tag, tokenize=None):
+        speech_parts = []
+
+        for p in self.soup.find_all(tag):
+            speech_parts.append(p.get_text())
+
+        # remove the irrelevant first 3 p tags and last 6 p tags
+        speech_parts = speech_parts[3:len(speech_parts)-6]
+        full_speech = ''.join(speech_parts)
 
         full_speech = self._clean_transcript(full_speech)
         if tokenize:
