@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
     rally_df = addToDataFrame(rally_data, label=1)
     union_df = addToDataFrame(union_data, label=0)
-    main_df = pd.concat([rally_df, union_df])
+    main_df = pd.concat([rally_df, union_df], ignore_index = True)
 
     print(main_df)
 
