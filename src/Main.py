@@ -10,7 +10,7 @@ import sys
 
 if __name__ == '__main__':
     rally_urls = []
-    rally_url_file = open('rally_urls.txt')
+    rally_url_file = open('trump_rally_urls.txt')
     for line in rally_url_file:
         rally_urls.append(line.replace('\n', ''))
     rally_url_file.close()

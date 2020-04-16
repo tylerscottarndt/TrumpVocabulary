@@ -22,24 +22,37 @@ def extract_urls_from(txt_file):
 
 # Python File to setup and pickle our dataframe we plan on working with    
 if __name__ == '__main__':
-    RALLY_TRANSCRIPTS, UNION_TRANSCRIPTS = [], []
-    total_rally_words = 0
-    for current_url in extract_urls_from('rally_urls.txt'):
-        full_speech = WebScraper(current_url).scrape_all_rally('p', tokenize=False)
-        total_rally_words += len(full_speech)
-        RALLY_TRANSCRIPTS.append(full_speech)
+    TRUMP_RALLY_TRANSCRIPTS, TRUMP_UNION_TRANSCRIPTS = [], []
+    for current_url in extract_urls_from('trump_rally_urls.txt'):
+        full_speech = WebScraper(current_url).scrape_trump_rally('p', tokenize=False)
+        TRUMP_RALLY_TRANSCRIPTS.append(full_speech)
 
-    total_union_words = 0
-    for current_url in extract_urls_from('union.txt'):
+    for current_url in extract_urls_from('trump_union_urls.txt'):
         full_speech = WebScraper(current_url).scrape_all_union('p', tokenize=False)
-        total_union_words += len(full_speech)
-        UNION_TRANSCRIPTS.append(full_speech)
+        TRUMP_UNION_TRANSCRIPTS.append(full_speech)
 
-    rally_df = addToDataFrame(RALLY_TRANSCRIPTS, label=1)
-    union_df = addToDataFrame(UNION_TRANSCRIPTS, label=0)
-    main_df = pd.concat([rally_df, union_df])
+    OBAMA_RALLY_TRANSCRIPTS, OBAMA_UNION_TRANSCRIPTS = [], []
+    for current_url in extract_urls_from('obama_rally_urls.txt'):
+        full_speech = WebScraper(current_url).scrape_obama_rally('font', tokenize=False)
+        OBAMA_RALLY_TRANSCRIPTS.append(full_speech)
+
+    for current_url in extract_urls_from('obama_union_urls.txt'):
+        full_speech = WebScraper(current_url).scrape_all_union('p', tokenize=False)
+        OBAMA_UNION_TRANSCRIPTS.append(full_speech)
+
+    trump_rally_df = addToDataFrame(TRUMP_RALLY_TRANSCRIPTS, label=1)
+    trump_union_df = addToDataFrame(TRUMP_UNION_TRANSCRIPTS, label=0)
+    trump_main_df = pd.concat([trump_rally_df, trump_union_df])
+
+    obama_rally_df = addToDataFrame(OBAMA_RALLY_TRANSCRIPTS, label=1)
+    obama_union_df = addToDataFrame(OBAMA_UNION_TRANSCRIPTS, label=0)
+    obama_main_df = pd.concat([obama_rally_df, obama_union_df])
 
     # We can pickle this dataframe.
-    pickle_out = open("main_df.pickle", "wb")
-    pickle.dump(main_df, pickle_out)
+    pickle_out = open("trump_main_df.pickle", "wb")
+    pickle.dump(trump_main_df, pickle_out)
+    pickle_out.close()
+
+    pickle_out = open("obama_main_df.pickle", "wb")
+    pickle.dump(obama_main_df, pickle_out)
     pickle_out.close()
