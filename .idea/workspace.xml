@@ -11,6 +11,11 @@
       <change beforePath="$PROJECT_DIR$/union.txt" beforeDir="false" afterPath="$PROJECT_DIR$/trump_union_urls.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+      <change afterPath="$PROJECT_DIR$/.ipynb_checkpoints/Untitled-checkpoint.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Untitled.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__main__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -132,6 +137,12 @@
         </subPane>
       </pane>
     </panes>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1aSK5PZZ9929qJfmvESkfmXL7x5" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -162,6 +173,7 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.__init__">
+  <component name="RunManager">
     <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="TrumpVocabulary" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -234,6 +246,8 @@
       <list>
         <item itemvalue="Python.__init__" />
         <item itemvalue="Python.WebScrape" />
+    <recent_temporary>
+      <list>
         <item itemvalue="Python.Main" />
       </list>
     </recent_temporary>
@@ -373,5 +387,13 @@
         </state>
       </provider>
     </entry>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="595" y="376" key="com.intellij.ide.util.TipDialog" timestamp="1586992337235">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="595" y="376" key="com.intellij.ide.util.TipDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1586992337235" />
   </component>
 </project>

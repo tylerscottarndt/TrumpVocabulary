@@ -15,7 +15,8 @@ class WebScraper:
         req = requests.get(url, headers)
         self.soup = BeautifulSoup(req.content, 'html.parser')
 
-    def scrape_trump_rally(self, tag, tokenize=None):
+    def scrape_all_rally(self, tag, tokenize=None):
+      
         [s.extract() for s in self.soup('a')]
         full_speech = ""
 
@@ -34,6 +35,7 @@ class WebScraper:
 
         return full_speech
 
+
     def scrape_obama_rally(self, tag, tokenize=None):
         full_speech = ""
 
@@ -49,12 +51,14 @@ class WebScraper:
 
         return full_speech
 
+
     def scrape_all_union(self, tag, tokenize=None):
         speech_parts = []
 
         for p in self.soup.find_all(tag):
-            speech_parts.append(p.get_text() + " ")
 
+            speech_parts.append(p.get_text() + " ")
+            speech_parts.append(p.get_text())
         # remove the irrelevant first 3 p tags and last 6 p tags
         speech_parts = speech_parts[3:len(speech_parts)-6]
         full_speech = ''.join(speech_parts)
@@ -69,12 +73,16 @@ class WebScraper:
     def _clean_transcript(self, text):
         # remove bracketed text
         text = re.sub('\[.*?\]', '', text)
+
         # replace apostraphe with no space
         text = re.sub("[‘’']", '', text)
         # replace remaining punctuation with a space
         text = re.sub('[^\w\s]', ' ', text)
         # remove newline characters
         text = text.replace('\n', ' ')
+
+        # remove non-word and non-space characters (i.e. punctuation)
+        text = re.sub('[^\w\s]', '', text)
         # remove numbers
         text = ''.join([i for i in text if not i.isdigit()])
         # change multiple spaces back to single space
