@@ -77,6 +77,6 @@ if __name__ == '__main__':
     main_df = pd.concat([rally_df, union_df], ignore_index=True)
     print("Saved!")
     # We can pickle this dataframe.
-    pickle_out = open("trump_main_df.pickle", "wb")
+    pickle_out = open("MAIN_DATAFRAME.pickle", "wb")
     pickle.dump(main_df, pickle_out)
     pickle_out.close()
