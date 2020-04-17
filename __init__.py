@@ -4,7 +4,7 @@ from WebScrape import WebScraper
 import nltk
 from nltk.corpus import stopwords
 
-stopwords = set(stopwords.words('english'))
+# stopwords = set(stopwords.words('english'))
 nltk.download('stopwords')
 
 
@@ -24,7 +24,7 @@ def generate_speech_snippets(speech_list, snippet_length=100):
         speech = speech.split()
         for i in range(0, len(speech), snippet_length):
             current_snippet = speech[i:i+snippet_length]
-            current_snippet = [word for word in current_snippet if word not in stopwords]
+            current_snippet = [word for word in current_snippet if not word in stopwords.words()]
             current_snippet = ' '.join(current_snippet)
             snippets.append(current_snippet)
 
@@ -93,6 +93,7 @@ if __name__ == '__main__':
     trump_speech_snippets_df = pd.concat([trump_rally_snippets_df, trump_union_snippets_df], ignore_index=True)
     pickle_item(trump_speech_snippets_df, "TRUMP_SNIPPETS_DF.pickle")
     print("Saved!")
+
 
     print("Labeling Obama snippets...")
     obama_rally_snippets_df = addToDataFrame(obama_rally_snippets, label=1)
