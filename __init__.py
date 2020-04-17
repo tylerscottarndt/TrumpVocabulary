@@ -68,9 +68,13 @@ if __name__ == '__main__':
     print("Gathering  Chunks...")
     for rally_trans in [TRUMP_RALLY_TRANSCRIPTS, OBAMA_RALLY_TRANSCRIPTS]:
         rally_data = gather_chunks(rally_data, rally_trans, chunk_length=CHUNKS_LENGTH)
-
+        print('transcript done.')
+    print('done.')
     for union_trans in [TRUMP_UNION_TRANSCRIPTS, OBAMA_UNION_TRANSCRIPTS]:
         union_data = gather_chunks(union_data, union_trans, chunk_length=CHUNKS_LENGTH)
+        print('transcript done.')
+    print('done.')
+
     print("Labeling...")
     rally_df = addToDataFrame(rally_data, label=1)
     union_df = addToDataFrame(union_data, label=0)
