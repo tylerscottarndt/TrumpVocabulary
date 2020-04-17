@@ -5,6 +5,7 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.tokenize import word_tokenize
 
 import nltk
+
 nltk.download('punkt')
 
 
@@ -16,7 +17,7 @@ class WebScraper:
         self.soup = BeautifulSoup(req.content, 'html.parser')
 
     def scrape_all_rally(self, tag, tokenize=None):
-      
+
         [s.extract() for s in self.soup('a')]
         full_speech = ""
 
@@ -35,7 +36,6 @@ class WebScraper:
 
         return full_speech
 
-
     def scrape_obama_rally(self, tag, tokenize=None):
         full_speech = ""
 
@@ -51,16 +51,14 @@ class WebScraper:
 
         return full_speech
 
-
     def scrape_all_union(self, tag, tokenize=None):
         speech_parts = []
 
         for p in self.soup.find_all(tag):
-
             speech_parts.append(p.get_text() + " ")
             speech_parts.append(p.get_text())
         # remove the irrelevant first 3 p tags and last 6 p tags
-        speech_parts = speech_parts[3:len(speech_parts)-6]
+        speech_parts = speech_parts[3:len(speech_parts) - 6]
         full_speech = ''.join(speech_parts)
 
         full_speech = self._clean_transcript(full_speech)
