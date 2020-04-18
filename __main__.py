@@ -137,18 +137,28 @@ obama_union_word_freq = get_word_length_freq(obama_unions)
 # create plot
 fig, ax = plt.subplots()
 index = np.arange(n_groups)
-bar_width = 0.35
+bar_width = 0.15
 opacity = 0.8
 
 rects1 = plt.bar(index, trump_rally_word_freq, bar_width,
                  alpha=opacity,
-                 color='b',
-                 label='Trump_Rally')
+                 color='#8c3f54',
+                 label='Trump rally')
 
 rects2 = plt.bar(index + bar_width, trump_union_word_freq, bar_width,
                  alpha=opacity,
-                 color='g',
-                 label='Trump_SOU')
+                 color='#70878e',
+                 label='Trump SOU')
+
+rects3 = plt.bar(index + bar_width*2, obama_rally_word_freq, bar_width,
+                 alpha=opacity,
+                 color='#8fd1d9',
+                 label='Obama rally')
+
+rects4 = plt.bar(index + bar_width*3, obama_union_word_freq, bar_width,
+                 alpha=opacity,
+                 color='#8c8270',
+                 label='Obama SOU')
 
 plt.xlabel('Word Lengths')
 plt.ylabel('Percentage of Speech')
