@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 # pd.set_option('display.max_rows', None)
 # pd.set_option('display.max_columns', None)
@@ -48,6 +49,19 @@ def get_word_length_freq(speech_list):
         new_dict[key] = round(new_dict[key]/word_count*100, 2)
     value_list = list(dict(sorted(new_dict.items(), key=lambda x: x[0])).values())
     return value_list
+
+
+def generate_wordcloud(speech_list):
+    text = ' '.join(speech_list)
+
+    # Create and generate a word cloud image:
+    wordcloud = WordCloud(background_color="white").generate(text)
+
+    # Display the generated image:
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.show()
+
 
 
 class load_file:
@@ -168,3 +182,9 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+
+# generate wordclouds
+generate_wordcloud(trump_rallies)
+generate_wordcloud(trump_unions)
+generate_wordcloud(obama_rallies)
+generate_wordcloud(obama_unions)
