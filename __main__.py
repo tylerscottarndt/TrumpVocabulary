@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from nltk.corpus import stopwords
+stopwords = set(stopwords.words('english'))
 
 # pd.set_option('display.max_rows', None)
 # pd.set_option('display.max_columns', None)
@@ -51,9 +53,26 @@ def get_word_length_freq(speech_list):
     return value_list
 
 
-def generate_wordcloud(speech_list):
-    text = ' '.join(speech_list)
+def get_avg_vocabulary(speech_list):
+    total_vocabulary = 0
+    for speech in speech_list:
+        curr_vocabulary = set()
+        curr_vocabulary.update(speech.split())
+        total_vocabulary += len(curr_vocabulary)
+    avg_vocabulary = total_vocabulary / len(speech_list)
+    return avg_vocabulary
 
+
+def get_cleaned_speeches(speech_list):
+    cleaned_speech_list = []
+    for speech in speech_list:
+        cleaned_speech = [word for word in speech.split() if word not in stopwords]
+        cleaned_speech = ' '.join(cleaned_speech)
+        cleaned_speech_list.append(cleaned_speech)
+    return cleaned_speech_list
+
+
+def generate_wordcloud(text):
     # Create and generate a word cloud image:
     wordcloud = WordCloud(background_color="white").generate(text)
 
@@ -61,6 +80,15 @@ def generate_wordcloud(speech_list):
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
     plt.show()
+
+
+def print_statistics(speech_list):
+    avg_rally_len = round(get_average_speech_length(speech_list))
+    avg_rally_vocab = round(get_avg_vocabulary(speech_list))
+    avg_rally_word_len = round(find_avg_word_length(speech_list), 2)
+    print("Average speech length: " + "{:,}".format(avg_rally_len) + ' words')
+    print("Average speech vocabulary: " + "{:,}".format(avg_rally_vocab) + ' words')
+    print("Average speech word length: " + str(avg_rally_word_len) + '\n')
 
 
 
@@ -84,60 +112,44 @@ trump_df = pd.read_pickle("trump_speeches_df.pickle")
 trump_rallies = get_speeches_list_from_df(trump_df, 1)
 trump_unions = get_speeches_list_from_df(trump_df, 0)
 # get clean trump speeches, i.e. no stop words
-trump_clean_df = pd.read_pickle("TRUMP_SNIPPETS_DF.pickle")
-trump_clean_rallies = get_speeches_list_from_df(trump_clean_df, 1)
-trump_clean_unions = get_speeches_list_from_df(trump_clean_df, 0)
+trump_clean_rallies = get_cleaned_speeches(trump_rallies)
+trump_clean_unions = get_cleaned_speeches(trump_unions)
 
 # get full obama speeches
 obama_df = pd.read_pickle("obama_speeches_df.pickle")
 obama_rallies = get_speeches_list_from_df(obama_df, 1)
 obama_unions = get_speeches_list_from_df(obama_df, 0)
 # get clean obama speeches, i.e. no stop words
-obama_clean_df = pd.read_pickle("OBAMA_SNIPPETS_DF.pickle")
-obama_clean_rallies = get_speeches_list_from_df(obama_clean_df, 1)
-obama_clean_unions = get_speeches_list_from_df(obama_clean_df, 0)
+obama_clean_rallies = get_cleaned_speeches(obama_rallies)
+obama_clean_unions = get_cleaned_speeches(obama_unions)
 
 print("DONALD TRUMP SPEECH STATISTICS: ")
 print("================================================")
-# find average length of trump speeches
-trump_avg_rally_len = round(get_average_speech_length(trump_rallies))
-trump_avg_union_len = round(get_average_speech_length(trump_unions))
-print("Trump average length of rally speech: " + "{:,}".format(trump_avg_rally_len) + ' words')
-print("Trump average length of SOU speech: " + "{:,}".format(trump_avg_union_len) + ' words\n')
+print("Pure Rallies:")
+print_statistics(trump_rallies)
 
-# find average word length of trump speeches
-trump_avg_rally_word_len = round(find_avg_word_length(trump_rallies), 2)
-trump_avg_union_word_len = round(find_avg_word_length(trump_unions), 2)
-print("Trump average rally word length: " + str(trump_avg_rally_word_len))
-print("Trump average SOU word length: " + str(trump_avg_union_word_len)+'\n')
+print("Cleaned Rallies:")
+print_statistics(trump_clean_rallies)
 
-# find average word length of clean trump speeches
-trump_avg_rally_word_len = round(find_avg_word_length(trump_clean_rallies), 2)
-trump_avg_union_word_len = round(find_avg_word_length(trump_clean_unions), 2)
-print("Removing common stop words...\n")
-print("Trump average rally word length: " + str(trump_avg_rally_word_len))
-print("Trump average SOU word length: " + str(trump_avg_union_word_len)+'\n')
+print("Pure SOU:")
+print_statistics(trump_unions)
+
+print("Cleaned SOU:")
+print_statistics(trump_clean_unions)
 
 print("BARACK OBAMA SPEECH STATISTICS: ")
 print("================================================")
-# find average length of obama speeches
-obama_avg_rally_len = round(get_average_speech_length(obama_rallies))
-obama_avg_union_len = round(get_average_speech_length(obama_unions))
-print("Obama average length of rally speech: " + "{:,}".format(obama_avg_rally_len) + ' words')
-print("Obama average length of SOU speech: " + "{:,}".format(obama_avg_union_len) + ' words\n')
+print("Pure Rallies:")
+print_statistics(obama_rallies)
 
-# find average word length of obama speeches
-obama_avg_rally_word_len = round(find_avg_word_length(obama_rallies), 2)
-obama_avg_union_word_len = round(find_avg_word_length(obama_unions), 2)
-print("Obama average rally word length: " + str(obama_avg_rally_word_len))
-print("Obama average SOU word length: " + str(obama_avg_union_word_len)+'\n')
+print("Cleaned Rallies:")
+print_statistics(obama_clean_rallies)
 
-# find average word length of clean obama speeches
-obama_avg_rally_word_len = round(find_avg_word_length(obama_clean_rallies), 2)
-obama_avg_union_word_len = round(find_avg_word_length(obama_clean_unions), 2)
-print("Removing common stop words...\n")
-print("Obama average rally word length: " + str(obama_avg_rally_word_len))
-print("Obama average SOU word length: " + str(obama_avg_union_word_len)+'\n')
+print("Pure SOU:")
+print_statistics(obama_unions)
+
+print("Cleaned SOU:")
+print_statistics(obama_clean_unions)
 
 # data to plot
 n_groups = 10
@@ -184,7 +196,7 @@ plt.tight_layout()
 plt.show()
 
 # generate wordclouds
-generate_wordcloud(trump_rallies)
-generate_wordcloud(trump_unions)
-generate_wordcloud(obama_rallies)
-generate_wordcloud(obama_unions)
+generate_wordcloud(' '.join(trump_clean_rallies))
+generate_wordcloud(' '.join(trump_clean_unions))
+generate_wordcloud(' '.join(obama_clean_rallies))
+generate_wordcloud(' '.join(obama_clean_unions))
