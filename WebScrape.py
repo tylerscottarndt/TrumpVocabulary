@@ -58,7 +58,7 @@ class WebScraper:
             speech_parts.append(p.get_text() + " ")
             speech_parts.append(p.get_text())
         # remove the irrelevant first 3 p tags and last 6 p tags
-        speech_parts = speech_parts[3:len(speech_parts) - 6]
+        speech_parts = speech_parts[4:len(speech_parts) - 13]
         full_speech = ''.join(speech_parts)
 
         full_speech = self._clean_transcript(full_speech)
