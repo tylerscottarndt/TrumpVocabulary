@@ -62,7 +62,7 @@ if __name__ == '__main__':
         TRUMP_UNION_TRANSCRIPTS.append(full_speech)
 
     for current_url in extract_urls_from('obama_rally_urls.txt'):
-        full_speech = WebScraper(current_url).scrape_obama_rally('font', tokenize=False)
+        full_speech = WebScraper(current_url).scrape_obama_rally('p', tokenize=False)
         OBAMA_RALLY_TRANSCRIPTS.append(full_speech)
 
     for current_url in extract_urls_from('obama_union_urls.txt'):

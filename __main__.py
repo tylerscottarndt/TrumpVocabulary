@@ -102,11 +102,6 @@ class load_file:
         return X_train, y_train, X_test, y_test
 
 
-# df = load_file('dataset_split_transcripts.npz')
-# X_train, y_train, X_test, y_test = df.get_data()
-# Load split data
-# print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
-
 # get full trump speeches
 trump_df = pd.read_pickle("trump_speeches_df.pickle")
 trump_rallies = get_speeches_list_from_df(trump_df, 1)
