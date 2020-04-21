@@ -36,13 +36,41 @@ class WebScraper:
 
         return full_speech
 
+    # def scrape_obama_rally(self, tag, tokenize=None):
+    #     full_speech = ""
+    #
+    #     for count, p in enumerate(self.soup.find_all(tag, attrs={'size': '3'})):
+    #         # don't include first two irrelevant tags
+    #         if count > 1:
+    #             full_speech = full_speech + p.get_text()
+    #
+    #     full_speech = self._clean_transcript(full_speech)
+    #     if tokenize:
+    #         full_speech = self.tokenize(full_speech)
+    #         return full_speech
+    #
+    #     return full_speech
+
     def scrape_obama_rally(self, tag, tokenize=None):
+        # get speech body
+        text_body = self.soup.find_all('div', attrs={'class': 'field-docs-content'})[0]
+        # remove i tags with audience laughter
+        [s.extract() for s in text_body.find_all('i') if s.get_text() == "Laughter"]
         full_speech = ""
 
-        for count, p in enumerate(self.soup.find_all(tag, attrs={'size': '3'})):
-            # don't include first two irrelevant tags
-            if count > 1:
-                full_speech = full_speech + p.get_text()
+        # extract all p tags from speech body
+        for p in text_body.find_all(tag):
+            text = p.get_text()
+            # <p> tag beginning with <i> tags signify new speaker
+            i_tags = p.find_all('i')
+            # add all text not beginning with <i> tag (i.e. no new speaker)
+            if len(i_tags) == 0:
+                full_speech += text
+            # add all text beginning with <i> tag of "the president" (i.e. Obama speaking)
+            else:
+                if i_tags[0].get_text() == "The President.":
+                    # remove "The President" signifying text
+                    full_speech += ' '.join(text.split()[2:])
 
         full_speech = self._clean_transcript(full_speech)
         if tokenize:
