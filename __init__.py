@@ -26,6 +26,9 @@ def generate_speech_snippets(speech_list, snippet_length=100):
             current_snippet = speech[i:i+snippet_length]
             current_snippet = [word for word in current_snippet if word not in stopwords]
             current_snippet = ' '.join(current_snippet)
+            if len(snippets) >= 4000:
+                return snippets
+
             snippets.append(current_snippet)
 
     return snippets
@@ -49,7 +52,7 @@ def pickle_item(item, file_name):
 
 # Python File to setup and pickle our dataframe we plan on working with    
 if __name__ == '__main__':
-    SNIPPET_LENGTH = 50
+    SNIPPET_LENGTH = 20
 
     OBAMA_RALLY_TRANSCRIPTS, OBAMA_UNION_TRANSCRIPTS = [], []
     TRUMP_RALLY_TRANSCRIPTS, TRUMP_UNION_TRANSCRIPTS = [], []
