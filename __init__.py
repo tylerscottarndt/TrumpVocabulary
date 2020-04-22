@@ -49,7 +49,7 @@ def pickle_item(item, file_name):
 
 # Python File to setup and pickle our dataframe we plan on working with    
 if __name__ == '__main__':
-    SNIPPET_LENGTH = 100
+    SNIPPET_LENGTH = 50
 
     OBAMA_RALLY_TRANSCRIPTS, OBAMA_UNION_TRANSCRIPTS = [], []
     TRUMP_RALLY_TRANSCRIPTS, TRUMP_UNION_TRANSCRIPTS = [], []
