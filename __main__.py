@@ -11,7 +11,16 @@ stopwords = set(stopwords.words('english'))
 # pd.set_option('display.max_colwidth', -1)
 
 
-def find_avg_word_length(speech_list):
+def get_cleaned_speeches(speech_list):
+    cleaned_speech_list = []
+    for speech in speech_list:
+        cleaned_speech = [word for word in speech.split() if word not in stopwords]
+        cleaned_speech = ' '.join(cleaned_speech)
+        cleaned_speech_list.append(cleaned_speech)
+    return cleaned_speech_list
+
+
+def get_avg_word_length(speech_list):
     word_count = 0
     total_characters = 0
     for speech in speech_list:
@@ -22,7 +31,7 @@ def find_avg_word_length(speech_list):
     return avg_word_length
 
 
-def get_average_speech_length(speech_list):
+def get_avg_word_counts(speech_list):
     word_count = 0
     for speech in speech_list:
         word_count += len(speech.split())
@@ -36,7 +45,7 @@ def get_speeches_list_from_df(df, attr_val):
     return speeches_list
 
 
-def get_word_length_freq(speech_list):
+def _get_word_length_freq(speech_list):
     new_dict = dict()
     word_count = 0
     for speech in speech_list:
@@ -63,15 +72,6 @@ def get_avg_vocabulary(speech_list):
     return avg_vocabulary
 
 
-def get_cleaned_speeches(speech_list):
-    cleaned_speech_list = []
-    for speech in speech_list:
-        cleaned_speech = [word for word in speech.split() if word not in stopwords]
-        cleaned_speech = ' '.join(cleaned_speech)
-        cleaned_speech_list.append(cleaned_speech)
-    return cleaned_speech_list
-
-
 def generate_wordcloud(text):
     # Create and generate a word cloud image:
     wordcloud = WordCloud(background_color="white").generate(text)
@@ -82,14 +82,94 @@ def generate_wordcloud(text):
     plt.show()
 
 
-def print_statistics(speech_list):
-    avg_rally_len = round(get_average_speech_length(speech_list))
-    avg_rally_vocab = round(get_avg_vocabulary(speech_list))
-    avg_rally_word_len = round(find_avg_word_length(speech_list), 2)
-    print("Average speech length: " + "{:,}".format(avg_rally_len) + ' words')
-    print("Average speech vocabulary: " + "{:,}".format(avg_rally_vocab) + ' words')
-    print("Average speech word length: " + str(avg_rally_word_len) + '\n')
+def generate_word_freq_graph(trump_speeches, obama_speeches):
+    # data to plot
+    n_groups = 10
+    # find discretized word lengths in trump speeches
+    trump_rally_word_freq = _get_word_length_freq(trump_speeches[0])
+    trump_union_word_freq = _get_word_length_freq(trump_speeches[1])
+    # find discretized word lengths in obama speeches
+    obama_rally_word_freq = _get_word_length_freq(obama_speeches[0])
+    obama_union_word_freq = _get_word_length_freq(obama_speeches[1])
 
+    # create plot
+    fig, ax = plt.subplots()
+    index = np.arange(n_groups)
+    bar_width = 0.15
+    opacity = 0.8
+
+    rects1 = plt.bar(index, trump_rally_word_freq, bar_width,
+                     alpha=opacity,
+                     color='#8c3f54',
+                     label='Trump rally')
+
+    rects2 = plt.bar(index + bar_width, trump_union_word_freq, bar_width,
+                     alpha=opacity,
+                     color='#70878e',
+                     label='Trump SOU')
+
+    rects3 = plt.bar(index + bar_width * 2, obama_rally_word_freq, bar_width,
+                     alpha=opacity,
+                     color='#8fd1d9',
+                     label='Obama rally')
+
+    rects4 = plt.bar(index + bar_width * 3, obama_union_word_freq, bar_width,
+                     alpha=opacity,
+                     color='#8c8270',
+                     label='Obama SOU')
+
+    plt.xlabel('Word Lengths')
+    plt.ylabel('Percentage of Speech')
+    plt.title('Frequency of Words by Length')
+    plt.xticks(index + bar_width, ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10+'))
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+
+def generate_comparison_graph(trump_speeches, obama_speeches, title_name, y_label):
+    # data to plot
+    n_groups = 2
+
+    # create plot
+    fig, ax = plt.subplots()
+    index = np.arange(n_groups)
+    bar_width = 0.25
+    opacity = 0.8
+
+    rects1 = ax.bar(index, trump_speeches, bar_width,
+                     alpha=opacity,
+                     color='#8c3f54',
+                     label='Trump')
+
+    rects2 = ax.bar(index + bar_width, obama_speeches, bar_width,
+                     alpha=opacity,
+                     color='#70878e',
+                     label='Obama')
+
+    plt.xlabel('Speech Types')
+    plt.ylabel(y_label)
+    plt.title(title_name)
+    plt.xticks(index + bar_width, ('Rallies', 'SOU'))
+    plt.legend()
+
+    _autolabel(rects1, ax)
+    _autolabel(rects2, ax)
+
+    fig.tight_layout()
+    plt.show()
+
+
+def _autolabel(rects, ax):
+    """Attach a text label above each bar in *rects*, displaying its height."""
+    for rect in rects:
+        height = rect.get_height()
+        ax.annotate('{:,}'.format(round(height, 2)),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0, 3),  # 3 points vertical offset
+                    textcoords="offset points",
+                    ha='center', va='bottom')
 
 
 class load_file:
@@ -106,92 +186,35 @@ class load_file:
 trump_df = pd.read_pickle("trump_speeches_df.pickle")
 trump_rallies = get_speeches_list_from_df(trump_df, 1)
 trump_unions = get_speeches_list_from_df(trump_df, 0)
-# get clean trump speeches, i.e. no stop words
-trump_clean_rallies = get_cleaned_speeches(trump_rallies)
-trump_clean_unions = get_cleaned_speeches(trump_unions)
 
 # get full obama speeches
 obama_df = pd.read_pickle("obama_speeches_df.pickle")
 obama_rallies = get_speeches_list_from_df(obama_df, 1)
 obama_unions = get_speeches_list_from_df(obama_df, 0)
-# get clean obama speeches, i.e. no stop words
-obama_clean_rallies = get_cleaned_speeches(obama_rallies)
-obama_clean_unions = get_cleaned_speeches(obama_unions)
 
-print("DONALD TRUMP SPEECH STATISTICS: ")
-print("================================================")
-print("Pure Rallies:")
-print_statistics(trump_rallies)
+# generate average word count visualizations
+trump_word_counts = [get_avg_word_counts(trump_rallies), get_avg_word_counts(trump_unions)]
+obama_word_counts = [get_avg_word_counts(obama_rallies), get_avg_word_counts(obama_unions)]
+generate_comparison_graph(trump_word_counts, obama_word_counts, "Average Word Count", "Number of Words")
 
-print("Cleaned Rallies:")
-print_statistics(trump_clean_rallies)
+# generate average vocabulary visualizations
+trump_vocabs = [get_avg_vocabulary(trump_rallies), get_avg_vocabulary(trump_unions)]
+obama_vocabs = [get_avg_vocabulary(obama_rallies), get_avg_vocabulary(obama_unions)]
+generate_comparison_graph(trump_vocabs, obama_vocabs, "Average Vocabulary", "Number of Words")
 
-print("Pure SOU:")
-print_statistics(trump_unions)
+# generate average word length visualizations
+trump_word_lengths = [get_avg_word_length(trump_rallies), get_avg_word_length(trump_unions)]
+obama_word_lengths = [get_avg_word_length(obama_rallies), get_avg_word_length(obama_unions)]
+generate_comparison_graph(trump_word_lengths, obama_word_lengths, "Average Word Length", "Number of Characters")
 
-print("Cleaned SOU:")
-print_statistics(trump_clean_unions)
-
-print("BARACK OBAMA SPEECH STATISTICS: ")
-print("================================================")
-print("Pure Rallies:")
-print_statistics(obama_rallies)
-
-print("Cleaned Rallies:")
-print_statistics(obama_clean_rallies)
-
-print("Pure SOU:")
-print_statistics(obama_unions)
-
-print("Cleaned SOU:")
-print_statistics(obama_clean_unions)
-
-# data to plot
-n_groups = 10
-# find discretized word lengths in trump speeches
-trump_rally_word_freq = get_word_length_freq(trump_rallies)
-trump_union_word_freq = get_word_length_freq(trump_unions)
-# find discretized word lengths in obama speeches
-obama_rally_word_freq = get_word_length_freq(obama_rallies)
-obama_union_word_freq = get_word_length_freq(obama_unions)
-
-# create plot
-fig, ax = plt.subplots()
-index = np.arange(n_groups)
-bar_width = 0.15
-opacity = 0.8
-
-rects1 = plt.bar(index, trump_rally_word_freq, bar_width,
-                 alpha=opacity,
-                 color='#8c3f54',
-                 label='Trump rally')
-
-rects2 = plt.bar(index + bar_width, trump_union_word_freq, bar_width,
-                 alpha=opacity,
-                 color='#70878e',
-                 label='Trump SOU')
-
-rects3 = plt.bar(index + bar_width*2, obama_rally_word_freq, bar_width,
-                 alpha=opacity,
-                 color='#8fd1d9',
-                 label='Obama rally')
-
-rects4 = plt.bar(index + bar_width*3, obama_union_word_freq, bar_width,
-                 alpha=opacity,
-                 color='#8c8270',
-                 label='Obama SOU')
-
-plt.xlabel('Word Lengths')
-plt.ylabel('Percentage of Speech')
-plt.title('Frequency of Words by Length')
-plt.xticks(index + bar_width, ('1', '2',  '3', '4', '5', '6', '7', '8', '9', '10+'))
-plt.legend()
-
-plt.tight_layout()
-plt.show()
+# generate word frequencies visualizations
+trump_speeches = [trump_rallies, trump_unions]
+obama_speeches = [obama_rallies, obama_unions]
+generate_word_freq_graph(trump_speeches, obama_speeches)
 
 # generate wordclouds
-generate_wordcloud(' '.join(trump_clean_rallies))
-generate_wordcloud(' '.join(trump_clean_unions))
-generate_wordcloud(' '.join(obama_clean_rallies))
-generate_wordcloud(' '.join(obama_clean_unions))
+generate_wordcloud(' '.join(get_cleaned_speeches(trump_rallies)))
+generate_wordcloud(' '.join(get_cleaned_speeches(trump_unions)))
+generate_wordcloud(' '.join(get_cleaned_speeches(obama_rallies)))
+generate_wordcloud(' '.join(get_cleaned_speeches(obama_unions)))
+

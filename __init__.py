@@ -26,9 +26,9 @@ def generate_speech_snippets(speech_list, snippet_length=100):
             current_snippet = speech[i:i+snippet_length]
             current_snippet = [word for word in current_snippet if word not in stopwords]
             current_snippet = ' '.join(current_snippet)
-            if len(snippets) >= 4000:
+            if len(snippets) >= 1500:
                 return snippets
-            
+
             snippets.append(current_snippet)
 
     return snippets
