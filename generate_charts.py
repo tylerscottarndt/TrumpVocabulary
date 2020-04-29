@@ -1,15 +1,9 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from wordcloud import WordCloud
 from nltk.corpus import stopwords
 stopwords = set(stopwords.words('english'))
-
-# pd.set_option('display.max_rows', None)
-# pd.set_option('display.max_columns', None)
-# pd.set_option('display.width', None)
-# pd.set_option('display.max_colwidth', -1)
-
 
 def get_cleaned_speeches(speech_list):
     cleaned_speech_list = []
@@ -183,12 +177,12 @@ class load_file:
 
 
 # get full trump speeches
-trump_df = pd.read_pickle("trump_speeches_df.pickle")
+trump_df = pd.read_pickle("DATA/trump_speeches_df.pickle")
 trump_rallies = get_speeches_list_from_df(trump_df, 1)
 trump_unions = get_speeches_list_from_df(trump_df, 0)
 
 # get full obama speeches
-obama_df = pd.read_pickle("obama_speeches_df.pickle")
+obama_df = pd.read_pickle("DATA/obama_speeches_df.pickle")
 obama_rallies = get_speeches_list_from_df(obama_df, 1)
 obama_unions = get_speeches_list_from_df(obama_df, 0)
 

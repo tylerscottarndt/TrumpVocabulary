@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 import pickle
 from sklearn.metrics import classification_report
-import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.metrics import confusion_matrix
 import itertools
 import matplotlib.pyplot as plt
@@ -12,6 +12,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from nltk.corpus import stopwords
 
 stopwords = set(stopwords.words('english'))
+
+
 def get_cleaned_speeches(speech_list):
     cleaned_speech_list = []
     for speech in speech_list:
@@ -19,6 +21,8 @@ def get_cleaned_speeches(speech_list):
         cleaned_speech = ' '.join(cleaned_speech)
         cleaned_speech_list.append(cleaned_speech)
     return cleaned_speech_list
+
+
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title='Confusion matrix',
@@ -66,8 +70,8 @@ def get_top_n_words(corpus, n):
     return words_freq[:n]
 
 
-trump_data = pickle.load(open("TRUMP_SNIPPETS_DF.pickle", "rb" ))
-obama_data = pickle.load(open("OBAMA_SNIPPETS_DF.pickle", "rb" ))
+trump_data = pickle.load(open("DATA/TRUMP_SNIPPETS_DF.pickle", "rb"))
+obama_data = pickle.load(open("DATA/OBAMA_SNIPPETS_DF.pickle", "rb"))
 X = obama_data['transcript'].to_numpy()
 y = obama_data['type'].to_numpy()
 
@@ -86,18 +90,14 @@ model.fit(X_train_tf, y_train)
 
 predictions = model.predict(X_test_tf)
 
-cm =confusion_matrix(y_test, predictions)
+cm = confusion_matrix(y_test, predictions)
 labels = ['Union', 'Rally']
 plot_confusion_matrix(cm, labels, title='Confusion Matrix')
 print(classification_report(y_test, predictions))
 
-
-trump_df = pd.read_pickle("trump_speeches_df.pickle")
-obama_df = pd.read_pickle("obama_speeches_df.pickle")
+trump_df = pd.read_pickle("DATA/trump_speeches_df.pickle")
+obama_df = pd.read_pickle("DATA/obama_speeches_df.pickle")
 trump_rallies = get_cleaned_speeches(get_speeches_list_from_df(trump_df, 1))
 trump_unions = get_cleaned_speeches(get_speeches_list_from_df(trump_df, 0))
 obama_rallies = get_cleaned_speeches(get_speeches_list_from_df(obama_df, 1))
 obama_unions = get_cleaned_speeches(get_speeches_list_from_df(obama_df, 0))
-
-for word in get_top_n_words(obama_rallies, 10):
-    print(word)
