@@ -29,7 +29,7 @@ Both folders you will find its accuracy, loss, and confusion matrix performance.
 
 <p>U.S. presidents are known to be great orators. They routinely give rally speeches to promote upcoming elections as well as numerous addresses to the country throughout their presidential terms. When listening to some of these speeches, it appears that our presidents likely change their verbiage, tone, and style when they are addressing their supportive base when compared to how they address the country. </p>
 
-<p>The goal of our project was to determine if presidents do, in fact, change the way they approach these different speeches and if so, do certain presidents adjust their speaking habits more than others?</p>
+<p><b>The goal of our project was to determine if presidents do, in fact, change the way they approach these different speeches and if so, do certain presidents adjust their speaking habits more than others? </b></p>
 </dd>
 
 
@@ -108,7 +108,14 @@ President Obama Confusion Matrix|  President Trump Confusion Matrix
 
  
  <dt>In Conclusion: </dt>
- <p> Our Neural Network indicates a higher discrepancy in speeches for President Obama; the Naive Bayes model was indifferent; and our additional data analytics revealed a higher discrepancy in speeches for President Trump. Therefore, our results are not conclusive enough for us to determine which leader adjusts his public speaking approach when addressing his base when compared to how he addresses the nation.</p>
+ 
+-  <p><b>Our Neural Network indicates a higher discrepancy in speeches for President Obama </b></p>
+  
+  
+ -  <p><b>The Naive Bayes model was indifferent; and our additional data analytics revealed a higher discrepancy in speeches for President Trump.</b></p>
+  
+  
+<p><b>Therefore, our results are not conclusive enough for us to determine which leader adjusts his public speaking approach when addressing his base when compared to how he addresses the nation.</b></p>
   <dd>
 </dl>
 
