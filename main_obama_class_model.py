@@ -137,6 +137,6 @@ class load_file:
         return X_train, y_train, X_test, y_test,vocab_size, embedding_matrix
 
 
-df = load_file('ObamaSplitData.npz')
+df = load_file('DATA/ObamaSplitData.npz')
 X_train, y_train, X_test, y_test,vocab_size, embedding_matrix = df.get_data()
 build_train_view()
